@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New Project Setup Handbook</title>
+<style>
+:root {
+  --ink: #1c2330;
+  --muted: #5b6472;
+  --brand: #1f3a5f;
+  --brand-light: #eef4fb;
+  --line: #e2e6ee;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", "Liberation Sans", Arial, sans-serif;
+  color: var(--ink);
+  background: #f6f7fa;
+  line-height: 1.6;
+}
+a { color: inherit; }
+code {
+  font-family: "SF Mono", "JetBrains Mono", "Liberation Mono", Menlo, Consolas, monospace;
+  font-size: 0.92em;
+  background: #eef1f6;
+  color: #1f3a5f;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+strong { color: #16202e; }
+
+/* top bar */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(246,247,250,0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+}
+.topbar nav {
+  max-width: 880px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px;
+}
+.topbar nav a { color: var(--muted); text-decoration: none; white-space: nowrap; }
+.topbar nav a:hover { color: var(--brand); }
+
+/* hero */
+.hero {
+  background: linear-gradient(160deg, #182536 0%, #1f3a5f 55%, #2d5d7b 100%);
+  color: #fff;
+  padding: 56px 24px 44px;
+}
+.hero-inner { max-width: 880px; margin: 0 auto; }
+.hero .kicker { letter-spacing: 3px; text-transform: uppercase; font-size: 11px; color: #9fc4dd; margin-bottom: 14px; }
+.hero h1 { font-size: 32px; margin: 0 0 12px 0; }
+.hero p { color: #d7e4ee; max-width: 600px; font-size: 15px; }
+.hero .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.hero .chip { border: 1px solid rgba(255,255,255,0.35); border-radius: 20px; padding: 4px 12px; font-size: 12.5px; color: #eaf2f7; }
+
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+section.chapter { padding: 40px 0; border-bottom: 1px solid var(--line); }
+section.chapter:last-of-type { border-bottom: none; }
+.chapter-kicker { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #6b86a3; margin-bottom: 6px; font-weight: 600; }
+.chapter-title { font-size: 24px; margin: 0 0 16px 0; }
+h3 { font-size: 16px; margin: 22px 0 8px 0; }
+
+/* flow diagram */
+.flow { display: flex; align-items: center; gap: 6px; margin: 18px 0 6px 0; flex-wrap: wrap; }
+.flow-step { flex: 1; min-width: 130px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 10px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.flow-step-variant { background: var(--brand); border-color: var(--brand); color: #fff; }
+.flow-step-variant em { color: #cfe0ee; }
+.flow-num { display: block; width: 26px; height: 26px; line-height: 26px; border-radius: 50%; background: var(--brand); color: #fff; font-size: 13px; font-weight: bold; margin: 0 auto 8px auto; }
+.flow-step-variant .flow-num { background: #fff; color: var(--brand); }
+.flow-label { font-size: 13px; }
+.flow-arrow { font-size: 18px; color: #98a1ad; }
+
+/* callouts */
+.callout { display: flex; gap: 12px; margin: 14px 0; padding: 13px 16px; border-radius: 8px; border-left: 4px solid; font-size: 14px; }
+.callout-icon { flex: 0 0 auto; width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; font-size: 12px; font-weight: bold; color: #fff; }
+.callout-body strong { display: block; margin-bottom: 3px; }
+.callout-body > div { color: #3a4453; }
+.callout.note { background: #eef4fb; border-color: #3d76b5; }
+.callout.note .callout-icon { background: #3d76b5; }
+.callout.tip { background: #eaf6f0; border-color: #2f9e63; }
+.callout.tip .callout-icon { background: #2f9e63; }
+.callout.warn { background: #fdf1e7; border-color: #c97a26; }
+.callout.warn .callout-icon { background: #c97a26; }
+.callout-body .codeblock { margin-top: 12px; }
+
+/* code blocks */
+.codeblock { position: relative; margin: 12px 0 18px 0; }
+.code-label { position: absolute; top: -9px; right: 12px; background: #c8ccd4; color: #20242c; font-family: monospace; font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 5px; }
+.codeblock pre { background: #1d2430; color: #e6e9f0; border-radius: 8px; padding: 14px 16px; margin: 0; overflow-x: auto; }
+.codeblock pre code { background: none; color: inherit; padding: 0; font-size: 13px; line-height: 1.6; }
+
+/* lists & tables */
+ol.steps { margin: 8px 0 12px 0; padding-left: 20px; }
+ol.steps li { margin-bottom: 6px; }
+table { width: 100%; border-collapse: collapse; margin: 10px 0 16px 0; font-size: 13.5px; }
+.kv-table td { padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.kv-table td:first-child { width: 38%; color: var(--brand); }
+.detect-table td { padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.detect-table td:first-child { width: 32%; font-weight: bold; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+.cheat-table th { text-align: left; background: var(--brand); color: #fff; padding: 8px 10px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.cheat-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.cheat-table tr:nth-child(even) td { background: #f5f7fa; }
+
+/* language picker */
+.lang-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 24px 0; }
+.lang-tab {
+  border: 1.5px solid var(--line); background: #fff; border-radius: 24px;
+  padding: 8px 16px; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  color: var(--muted); transition: all 0.15s ease;
+}
+.lang-tab .lang-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 7px; }
+.lang-tab:hover { border-color: var(--accent-hover, var(--brand)); }
+.lang-tab.active { background: var(--accent, var(--brand)); border-color: var(--accent, var(--brand)); color: #fff; }
+.lang-tab.active .lang-dot { background: #fff !important; }
+
+.lang-panel { display: none; }
+.lang-panel.active { display: block; animation: fade 0.15s ease; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.lang-banner {
+  border-radius: 10px; padding: 18px 20px; margin-bottom: 18px;
+  background: var(--accent, var(--brand)); color: #fff;
+}
+.lang-tag { display: inline-block; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; background: rgba(255,255,255,0.18); padding: 3px 10px; border-radius: 12px; margin-bottom: 8px; }
+.lang-title { color: #fff; font-size: 22px; margin: 0 0 4px 0; }
+.lang-sub { color: #e7eef5; font-size: 13.5px; margin: 0; }
+
+footer { text-align: center; padding: 32px 24px 50px; color: #98a1ad; font-size: 12.5px; }
+@media (max-width: 600px) {
+  .flow { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"><nav><a href="#before">Before You Begin</a><a href="#workflow">Workflow</a><a href="#step1">Step 1</a><a href="#step2">Step 2 · Your Stack</a><a href="#step3">Step 3</a><a href="#step4">Step 4</a><a href="#daily">Daily Reminders</a><a href="#appendix">Cheat Sheet</a></nav></div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Personal Dev Reference</div>
+    <h1>New Project Setup Handbook</h1>
+    <p>Bootstrapping any project on this machine — from an empty folder to a pushed GitHub
+    repo open in VS Code — across every installed language and embedded toolchain.</p>
+    <div class="chips"><span class="chip">Python</span><span class="chip">Node.js</span><span class="chip">Go</span><span class="chip">Rust</span><span class="chip">PlatformIO</span><span class="chip">ESP-IDF</span><span class="chip">Raspberry Pi Pico W</span></div>
+  </div>
+</div>
+<div class="wrap">
+<section class="chapter" id="before">
+  <div class="chapter-kicker">One-time setup</div>
+  <h2 class="chapter-title">Before You Begin — GitHub CLI Setup</h2>
+  
+<p>Install and authenticate <code>gh</code> if not done yet:</p>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>brew install gh
+gh auth login</code></pre>
+</div>
+<p>Choose <strong>GitHub.com → HTTPS → Login with a web browser</strong> and follow the prompts.</p>
+
+</section>
+<section class="chapter" id="workflow">
+  <div class="chapter-kicker">Overview</div>
+  <h2 class="chapter-title">The Four-Step Workflow</h2>
+  
+<p>Every project follows the same outer wrapper, regardless of language. Steps 1, 3 and 4 are
+identical no matter what you're building — only <strong>Step 2</strong> changes, and that's
+where the dedicated, color-coded chapters in this handbook come in.</p>
+
+<div class="flow">
+  <div class="flow-step"><span class="flow-num">1</span><span class="flow-label">Create the GitHub repository</span></div>
+  <div class="flow-arrow">&#8594;</div>
+  <div class="flow-step flow-step-variant"><span class="flow-num">2</span><span class="flow-label">Set up the project &amp; toolchain<br><em>(language-specific)</em></span></div>
+  <div class="flow-arrow">&#8594;</div>
+  <div class="flow-step"><span class="flow-num">3</span><span class="flow-label">Connect to GitHub &amp; push</span></div>
+  <div class="flow-arrow">&#8594;</div>
+  <div class="flow-step"><span class="flow-num">4</span><span class="flow-label">Open in VS Code</span></div>
+</div>
+
+</section>
+<section class="chapter" id="step1">
+  <div class="chapter-kicker">Step 1</div>
+  <h2 class="chapter-title">Create the GitHub Repository</h2>
+  
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>gh repo create my-project-name --private --description "Short description"</code></pre>
+</div>
+<table class="kv-table">
+  <tr><td><code>--private</code> / <code>--public</code></td><td>visibility</td></tr>
+  <tr><td><code>--description</code></td><td>optional but useful</td></tr>
+</table>
+<div class="callout warn">
+  <div class="callout-icon">!</div>
+  <div class="callout-body"><strong>Don't pre-initialize</strong><div>Do <strong>not</strong> tick “Initialize repository” or add a README at this point — the local init in Step 2 does that.</div></div>
+</div>
+
+</section>
+<section class="chapter" id="step2">
+  <div class="chapter-kicker">Step 2</div>
+  <h2 class="chapter-title">Set Up Your Project</h2>
+  <p>Click the stack you're using — the rest of this handbook applies no matter which you pick.</p><div class="lang-tabs"><button class="lang-tab active" data-lang="python" style="--accent:#2D6A8C" onclick="selectLang('python')"><span class="lang-dot" style="background:#2D6A8C"></span>Python</button><button class="lang-tab" data-lang="node" style="--accent:#3C7A3E" onclick="selectLang('node')"><span class="lang-dot" style="background:#3C7A3E"></span>Node.js</button><button class="lang-tab" data-lang="go" style="--accent:#00768D" onclick="selectLang('go')"><span class="lang-dot" style="background:#00768D"></span>Go</button><button class="lang-tab" data-lang="rust" style="--accent:#A6541E" onclick="selectLang('rust')"><span class="lang-dot" style="background:#A6541E"></span>Rust</button><button class="lang-tab" data-lang="platformio" style="--accent:#C2630C" onclick="selectLang('platformio')"><span class="lang-dot" style="background:#C2630C"></span>PlatformIO</button><button class="lang-tab" data-lang="espidf" style="--accent:#A4282D" onclick="selectLang('espidf')"><span class="lang-dot" style="background:#A4282D"></span>ESP-IDF</button><button class="lang-tab" data-lang="pico" style="--accent:#9C1B43" onclick="selectLang('pico')"><span class="lang-dot" style="background:#9C1B43"></span>Raspberry Pi Pico W</button></div><div class="lang-panel active" id="panel-python">
+  <div class="lang-banner" style="--accent:#2D6A8C">
+    <span class="lang-tag">uv-managed</span>
+    <h2 class="lang-title">Python</h2>
+    <p class="lang-sub">Fast, modern Python projects with uv for env + deps.</p>
+  </div>
+  
+<h3>Create the project</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cd ~/dev
+mkdir my-project &amp;&amp; cd my-project
+
+uv init .               # creates pyproject.toml + hello.py stub
+uv venv                 # creates .venv/ (git-ignored by default)
+source .venv/bin/activate</code></pre>
+</div>
+
+<h3>Add dependencies</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>uv add requests httpx       # runtime deps
+uv add --dev pytest ruff    # dev-only deps</code></pre>
+</div>
+
+<h3>Run</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>python main.py
+pytest</code></pre>
+</div>
+
+<div class="callout note">
+  <div class="callout-icon">i</div>
+  <div class="callout-body"><strong>Already handled</strong><div><code>.venv/</code> is included in the <code>.gitignore</code> that <code>uv init</code> generates — nothing extra to configure.</div></div>
+</div>
+
+</div><div class="lang-panel" id="panel-node">
+  <div class="lang-banner" style="--accent:#3C7A3E">
+    <span class="lang-tag">npm / fnm</span>
+    <h2 class="lang-title">Node.js</h2>
+    <p class="lang-sub">JavaScript or TypeScript, with automatic version switching.</p>
+  </div>
+  
+<h3>Create the project</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cd ~/dev
+mkdir my-project &amp;&amp; cd my-project
+
+echo "24" &gt; .node-version   # fnm auto-switches Node version on cd
+node --version              # verify
+
+npm init -y                 # creates package.json</code></pre>
+</div>
+
+<h3>Or, for a TypeScript project</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>npm init -y
+npm install --save-dev typescript @types/node ts-node
+npx tsc --init</code></pre>
+</div>
+
+<h3>Ignore dependencies</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>echo "node_modules/" &gt;&gt; .gitignore</code></pre>
+</div>
+
+</div><div class="lang-panel" id="panel-go">
+  <div class="lang-banner" style="--accent:#00768D">
+    <span class="lang-tag">go modules</span>
+    <h2 class="lang-title">Go</h2>
+    <p class="lang-sub">Single static binary, dependency isolation built in.</p>
+  </div>
+  
+<h3>Create the project</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cd ~/dev
+mkdir my-project &amp;&amp; cd my-project
+
+go mod init github.com/YOUR_USERNAME/my-project</code></pre>
+</div>
+
+<h3>Create <code>main.go</code></h3>
+<div class="codeblock">
+  <div class="code-label">go</div>
+  <pre><code>package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("hello")
+}</code></pre>
+</div>
+
+<h3>Run</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>go run .
+go build -o my-project .</code></pre>
+</div>
+
+<div class="callout note">
+  <div class="callout-icon">i</div>
+  <div class="callout-body"><strong>Dependency isolation</strong><div>Go modules handle this automatically via <code>go.mod</code> — no virtual environment needed.</div></div>
+</div>
+
+</div><div class="lang-panel" id="panel-rust">
+  <div class="lang-banner" style="--accent:#A6541E">
+    <span class="lang-tag">cargo</span>
+    <h2 class="lang-title">Rust</h2>
+    <p class="lang-sub">cargo scaffolds everything — including git — in one step.</p>
+  </div>
+  
+<h3>Create the project</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cd ~/dev
+cargo new my-project
+cd my-project</code></pre>
+</div>
+
+<div class="callout warn">
+  <div class="callout-icon">!</div>
+  <div class="callout-body"><strong>Skip git init later</strong><div><code>cargo new</code> creates the full project structure (<code>src/main.rs</code>, <code>Cargo.toml</code>) and already runs <code>git init</code> inside the directory. When you reach <strong>Step 3</strong>, skip the <code>git init</code> line — everything else still applies.</div></div>
+</div>
+
+<h3>Run</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cargo run
+cargo test
+cargo build --release</code></pre>
+</div>
+
+</div><div class="lang-panel" id="panel-platformio">
+  <div class="lang-banner" style="--accent:#C2630C">
+    <span class="lang-tag">embedded · multi-board</span>
+    <h2 class="lang-title">PlatformIO</h2>
+    <p class="lang-sub">Board-agnostic embedded framework for ESP32, AVR, and more.</p>
+  </div>
+  
+<h3>Option A — VS Code (easiest)</h3>
+<ol class="steps">
+  <li>Open VS Code, click the PlatformIO icon in the sidebar</li>
+  <li><strong>PlatformIO Home → New Project</strong></li>
+  <li>Set name, board (e.g. <code>Espressif ESP32-S3-DevKitC-1</code>), framework (<code>Arduino</code> or <code>ESP-IDF</code>)</li>
+  <li>Location: <code>~/dev/my-project</code></li>
+  <li>Click <strong>Finish</strong> and wait for package download</li>
+</ol>
+
+<h3>Option B — CLI</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cd ~/dev
+mkdir my-project &amp;&amp; cd my-project
+pio project init --board esp32-s3-devkitc-1</code></pre>
+</div>
+
+<h3>Build and upload</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>pio run               # build
+pio run --target upload
+pio device monitor    # serial output</code></pre>
+</div>
+
+</div><div class="lang-panel" id="panel-espidf">
+  <div class="lang-banner" style="--accent:#A4282D">
+    <span class="lang-tag">Espressif</span>
+    <h2 class="lang-title">ESP-IDF</h2>
+    <p class="lang-sub">The native Espressif framework for ESP32-family chips.</p>
+  </div>
+  
+<div class="callout warn">
+  <div class="callout-icon">!</div>
+  <div class="callout-body"><strong>Activate every new terminal session</strong><div>Run this once per terminal before any <code>idf.py</code> command:<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>get_idf</code></pre>
+</div></div></div>
+</div>
+
+<h3>Create a project from the template</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cd ~/dev
+cp -r $IDF_PATH/examples/get-started/hello_world my-project
+cd my-project</code></pre>
+</div>
+
+<h3>Or, from scratch in VS Code</h3>
+<ol class="steps">
+  <li>Open VS Code → Command Palette (<code>Cmd+Shift+P</code>)</li>
+  <li><strong>ESP-IDF: New Project</strong> → fill in name, target chip, location (<code>~/dev/</code>)</li>
+</ol>
+
+<h3>Build, flash, monitor</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>idf.py set-target esp32s3     # or esp32, esp32c3, etc.
+idf.py build
+idf.py -p /dev/cu.usbserial-* flash monitor</code></pre>
+</div>
+
+<div class="callout note">
+  <div class="callout-icon">i</div>
+  <div class="callout-body"><strong>Multiple devices connected?</strong><div>The port (<code>/dev/cu.usbserial-*</code>) auto-expands to the connected device. If several ports exist, use:<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>idf.py -p $(ls /dev/cu.usbserial-* | head -1) flash monitor</code></pre>
+</div></div></div>
+</div>
+
+</div><div class="lang-panel" id="panel-pico">
+  <div class="lang-banner" style="--accent:#9C1B43">
+    <span class="lang-tag">Pico SDK · CMake</span>
+    <h2 class="lang-title">Raspberry Pi Pico W</h2>
+    <p class="lang-sub">C/C++ on RP2040/RP2350 using the official Pico SDK.</p>
+  </div>
+  
+<h3>Option A — VS Code Raspberry Pi Pico extension (recommended)</h3>
+<ol class="steps">
+  <li>Open VS Code → Command Palette (<code>Cmd+Shift+P</code>)</li>
+  <li><strong>Raspberry Pi Pico: New Project from Example</strong> — or <strong>New C/C++ Project</strong></li>
+  <li>Set name (<code>my-project</code>), location (<code>~/dev/</code>), board (<code>Pico W</code>)</li>
+  <li>The extension generates <code>CMakeLists.txt</code>, <code>main.c</code>, and the toolchain config</li>
+</ol>
+
+<h3>Option B — manually</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cd ~/dev
+mkdir my-project &amp;&amp; cd my-project</code></pre>
+</div>
+
+<p class="lead-in">Create <code>CMakeLists.txt</code>:</p>
+<div class="codeblock">
+  <div class="code-label">cmake</div>
+  <pre><code>cmake_minimum_required(VERSION 3.13)
+include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+project(my-project C CXX ASM)
+pico_sdk_init()
+add_executable(my-project main.c)
+target_link_libraries(my-project pico_stdlib)
+pico_add_extra_outputs(my-project)</code></pre>
+</div>
+
+<h3>Build</h3>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>mkdir build &amp;&amp; cd build
+cmake .. -DPICO_BOARD=pico_w
+make -j$(sysctl -n hw.logicalcpu)</code></pre>
+</div>
+
+<h3>Flash</h3>
+<p>Hold <strong>BOOTSEL</strong>, plug in USB, then copy the <code>.uf2</code> file:</p>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cp my-project.uf2 /Volumes/RPI-RP2/</code></pre>
+</div>
+
+</div>
+</section>
+<section class="chapter" id="step3">
+  <div class="chapter-kicker">Step 3</div>
+  <h2 class="chapter-title">Connect to GitHub &amp; Push</h2>
+  
+<p>This step is identical for every project type, with one exception noted below.</p>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code># Inside ~/dev/my-project
+
+git init
+git add .
+git commit -m "initial commit"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/my-project.git
+git push -u origin main</code></pre>
+</div>
+
+<div class="callout warn">
+  <div class="callout-icon">!</div>
+  <div class="callout-body"><strong>Exception: Rust</strong><div><code>cargo new</code> already ran <code>git init</code> for you in Step 2 — skip that line. Everything else is identical:<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>git add .
+git commit -m "initial commit"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/my-project.git
+git push -u origin main</code></pre>
+</div></div></div>
+</div>
+
+<h3>Shortcut via <code>gh</code></h3>
+<p>Add the remote without copy-pasting the URL:</p>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>gh repo set-default YOUR_USERNAME/my-project
+git push -u origin main</code></pre>
+</div>
+
+</section>
+<section class="chapter" id="step4">
+  <div class="chapter-kicker">Step 4</div>
+  <h2 class="chapter-title">Open in VS Code</h2>
+  
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>code .</code></pre>
+</div>
+<p>VS Code detects the language and activates the relevant extension automatically:</p>
+<table class="detect-table">
+  <tr><td><span class="dot" style="background:#2D6A8C"></span>Python</td><td>Picks up <code>.venv</code> and <code>pyproject.toml</code></td></tr>
+<tr><td><span class="dot" style="background:#00768D"></span>Go</td><td>Detects <code>go.mod</code></td></tr>
+<tr><td><span class="dot" style="background:#A6541E"></span>Rust</td><td>Detects <code>Cargo.toml</code> and starts rust-analyzer</td></tr>
+<tr><td><span class="dot" style="background:#C2630C"></span>PlatformIO</td><td>Shows the PlatformIO toolbar</td></tr>
+<tr><td><span class="dot" style="background:#A4282D"></span>ESP-IDF</td><td>Shows the IDF status bar (chip target, port)</td></tr>
+<tr><td><span class="dot" style="background:#9C1B43"></span>Pico</td><td>Shows the Pico SDK status bar</td></tr>
+</table>
+
+</section>
+<section class="chapter" id="daily">
+  <div class="chapter-kicker">Quick reference</div>
+  <h2 class="chapter-title">Daily Workflow Reminders</h2>
+  
+<p>One block, three reminders — whichever apply to your stack:</p>
+<div class="codeblock">
+  <div class="code-label">bash</div>
+  <pre><code>cd ~/dev/my-project     # fnm switches Node version automatically
+
+# Python — activate venv if not using uv run
+source .venv/bin/activate
+
+# ESP-IDF — activate in every new terminal
+get_idf</code></pre>
+</div>
+
+</section>
+<section class="chapter" id="appendix">
+  <div class="chapter-kicker">Reference</div>
+  <h2 class="chapter-title">Appendix — gh CLI Cheat Sheet</h2>
+  
+<table class="cheat-table">
+  <thead><tr><th>Task</th><th>Command</th></tr></thead>
+  <tbody>
+  <tr><td>Create GitHub repo</td><td><code>gh repo create NAME --private</code></td></tr>
+<tr><td>Open repo in browser</td><td><code>gh repo view --web</code></td></tr>
+<tr><td>View repo status</td><td><code>gh repo view</code></td></tr>
+<tr><td>Create a PR</td><td><code>gh pr create</code></td></tr>
+<tr><td>List open PRs</td><td><code>gh pr list</code></td></tr>
+<tr><td>Clone an existing repo</td><td><code>gh repo clone USER/REPO ~/dev/REPO</code></td></tr>
+  </tbody>
+</table>
+
+</section>
+</div>
+<footer>New Project Setup Handbook &middot; prepared for Jakub &middot; June 2026</footer>
+
+<script>
+function selectLang(id) {
+  document.querySelectorAll('.lang-panel').forEach(function(el){ el.classList.toggle('active', el.id === 'panel-' + id); });
+  document.querySelectorAll('.lang-tab').forEach(function(el){ el.classList.toggle('active', el.dataset.lang === id); });
+  var btn = document.querySelector('.lang-tab[data-lang="' + id + '"]');
+  if (btn) { document.querySelectorAll('.lang-tab').forEach(function(el){ el.style.removeProperty('--accent-hover'); }); }
+  history.replaceState(null, '', '#' + id);
+}
+window.addEventListener('DOMContentLoaded', function () {
+  var initial = (location.hash || '').replace('#', '') || 'python';
+  if (!document.getElementById('panel-' + initial)) initial = 'python';
+  selectLang(initial);
+});
+</script>
+</body>
+</html>
